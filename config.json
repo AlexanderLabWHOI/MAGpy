@@ -1,8 +1,10 @@
 {
-    "phylophlan_dir": "./phylophlan",
-    "uniprot_sprot": "single_ecoli.dmnd",
-    "sourmash_gbk": "ecolidb.sbt.json",
-    "pfam_dir": "/exports/cmvm/eddie/eb/groups/watson_grp/software/",
-    "checkm_dataroot": "./checkm_data"
+    "phylophlan_dir": "/vortexfs1/omics/alexander/halexander/MAGpy-setup/phylophlan",
+    "uniprot_sprot": "/vortexfs1/omics/alexander/halexander/MAGpy-setup/uniprot_trembl.dmnd",
+    "sourmash_gbk": "/vortexfs1/omics/alexander/halexander/MAGpy-setup/genbank-d2-k31.sbt.json",
+    "pfam_dir": "/vortexfs1/omics/alexander/halexander/MAGpy-setup/",
+    "checkm_dataroot": "/vortexfs1/omics/alexander/halexander/MAGpy-setup/checkm_data",
+    "busco_euk": "/vortexfs1/omics/alexander/halexander/MAGpy-setup/eukaryota_odb9",
+    "busco_bact": "/vortexfs1/omics/alexander/halexander/MAGpy-setup/bacteria_odb9",
 }
 
