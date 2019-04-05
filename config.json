@@ -5,6 +5,6 @@
     "pfam_dir": "/vortexfs1/omics/alexander/halexander/MAGpy-setup/",
     "checkm_dataroot": "/vortexfs1/omics/alexander/halexander/MAGpy-setup/checkm_data",
     "busco_euk": "/vortexfs1/omics/alexander/halexander/MAGpy-setup/eukaryota_odb9",
-    "busco_bact": "/vortexfs1/omics/alexander/halexander/MAGpy-setup/bacteria_odb9",
+    "busco_bac": "/vortexfs1/omics/alexander/halexander/MAGpy-setup/bacteria_odb9",
 }
 
