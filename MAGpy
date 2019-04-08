@@ -8,7 +8,9 @@ configfile: "config.json"
 IDS, = glob_wildcards("mags/{id}.fa")
 
 rule all:
-	 input: "sourmash_report.csv", "diamond_bin_report_plus.tsv", expand("pfam/{sample}.pfam", sample=IDS), expand("sourmash/{sample}.sm", sample=IDS), expand("diamond_report/bin.{sample}.tsv", sample=IDS), "checkm_plus.txt", "tree/MAGpy/MAGpy.tree.nwk", expand("busco/euk/{sample}/full_table_{sample}.tsv", sample=IDS), "busco_bac_report.tsv", "busco_euk_report.tsv",  expand("busco/bac/{sample}/full_table_{sample}_bac.tsv", sample=IDS)
+	 input: "sourmash_report.csv", "diamond_bin_report_plus.tsv", expand("pfam/{sample}.pfam", sample=IDS), expand("sourmash/{sample}.sm", sample=IDS), expand("diamond_report/bin.{sample}.tsv", sample=IDS), "checkm_plus.txt", "tree/MAGpy/MAGpy.tree.nwk", expand("busco/euk/{sample}/full_table_{sample}.tsv", sample=IDS), "busco_euk_report.tsv", #  expand("busco/bac/{sample}/full_table_{sample}_bac.tsv", sample=IDS), "busco_bac_report.tsv"
+
+localrules: mv_busco_euk 
 
 rule checkm:
 	input: "mags"
@@ -130,34 +132,52 @@ rule phylophlan_link:
 
 rule busco_euk:
     input: "mags/{id}.fa"
-    output: "busco/euk/{id}/full_table_{id}.tsv"
+    output: "run_{id}/full_table_{id}.tsv"
     params: 
         outname = "{id}",
         db = config["busco_euk"],
-        outdir = "./busco/euk/{id}"
     conda: "envs/busco.yaml"
     shell: 
         '''
         run_BUSCO.py -i {input} -o {params.outname} -l {params.db} -m geno -f 
-        cp -a run_{params.outname}/. {params.outdir} 
-        rm -rf run_{params.outname}
         '''
- 
 
-rule busco_bac:
-    input: "mags/{id}.fa"
-    output: "busco/bac/{id}/full_table_{id}_bac.tsv"
+rule mv_busco_euk:
+    input:  "run_{id}/full_table_{id}.tsv"
+    output: "busco/euk/{id}/full_table_{id}.tsv" 
     params: 
-        outname = "{id}_bac",
-        db = config["busco_bac"],
-        outdir = "./busco/bac/{id}"
-    conda: "envs/busco.yaml"
+        outname = "{id}", 
+        outdir = "busco/euk/{id}"
     shell: 
-        '''
-        run_BUSCO.py -i {input} -o {params.outname} -l {params.db} -m geno -f 
-        cp -a run_{params.outname}/. {params.outdir} 
-        rm -rf run_{params.outname}   
-        '''
+        """ 
+         cp -a run_{params.outname}/. {params.outdir} 
+         rm -rf run_{params.outname}   
+        """ 
+
+#rule busco_bac:
+#    input: "mags/{id}.fa"
+#    output: "run_{id}_bac/{id}_bac.tsv"
+#    params: 
+#        outname = "{id}_bac",
+#        db = config["busco_bac"], 
+#    conda: "envs/busco.yaml"
+#    shell: 
+#        '''
+#        run_BUSCO.py -i {input} -o {params.outname} -l {params.db} -m geno -f  
+#        '''
+
+#rule mv_busco_bac:
+#    input: "run_{id}_bac/full_table_{id}_bac.tsv"
+#    output: "busco/bac/{id}/full_table_{id}_bac.tsv"
+#    params:
+#        outname =  "{id}_bac",
+#        outdir = "busco/bac/{id}"
+#    shell: 
+#        """
+#         cp -a run_{params.outname}/. {params.outdir} 
+#         rm -rf run_{params.outname}   
+#        """
+
 rule busco_summary_euk:
         input: expand("busco/euk/{sample}/full_table_{sample}.tsv", sample=IDS)
         output: "busco_euk_report.tsv"
@@ -166,12 +186,12 @@ rule busco_summary_euk:
         shell: "python scripts/busco-report.py -d {params.dire} -o {output}"
 
 
-rule busco_summary_bac:
-        input: expand("busco/bac/{sample}/full_table_{sample}_bac.tsv", sample=IDS)
-        output: "busco_bac_report.tsv"
-        params: 
-            dire = "busco/bac"
-        shell: "python scripts/busco-report.py -d {params.dire} -o {output}"
+#rule busco_summary_bac:
+#        input: expand("busco/bac/{sample}/full_table_{sample}_bac.tsv", sample=IDS)
+#        output: "busco_bac_report.tsv"
+#        params: 
+#            dire = "busco/bac"
+#        shell: "python scripts/busco-report.py -d {params.dire} -o {output}"
 
 ##########################################
 #
