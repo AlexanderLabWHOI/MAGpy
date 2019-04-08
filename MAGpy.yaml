@@ -26,21 +26,21 @@ diamond:
 
 checkm: 
     queue: compute
-    threads: 16
-    mem: 32 
+    threads: 32
+    mem: 64 
     time: 1440
 
 phylophlan_link:
     queue: compute
     threads: 16
-    mem: 16
+    mem: 32
     time: 720
 
 pfam_scan:
     queue: compute
-    mem: 4
-    time: 720
-    threads: 4
+    mem: 8
+    time: 1440
+    threads: 8
 
 sourmash_sig:
     queue: scavenger
@@ -50,7 +50,19 @@ sourmash_sig:
 
 sourmash_gather: 
     queue: compute
-    time: 720
-    mem: 3
+    time: 1440
+    mem: 16
     threads: 1
 
+
+busco_euk: 
+    queue: compute
+    time: 720
+    mem: 8
+    threads: 1
+
+busco_bac: 
+    queue: compute
+    time: 720
+    mem: 8
+    threads: 1
