@@ -10,6 +10,8 @@ IDS, = glob_wildcards("mags/{id}.fa")
 rule all:
 	 input: "sourmash_report.csv", "diamond_bin_report_plus.tsv", expand("pfam/{sample}.pfam", sample=IDS), expand("sourmash/{sample}.sm", sample=IDS), expand("diamond_report/bin.{sample}.tsv", sample=IDS), "checkm_plus.txt", "tree/MAGpy/MAGpy.tree.nwk", expand("busco/euk/{sample}/full_table_{sample}.tsv", sample=IDS), "busco_euk_report.tsv", #  expand("busco/bac/{sample}/full_table_{sample}_bac.tsv", sample=IDS), "busco_bac_report.tsv"
 
+localrules: mv_busco_euk 
+
 rule checkm:
 	input: "mags"
 	output: "checkm.txt"
