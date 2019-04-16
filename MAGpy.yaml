@@ -26,9 +26,9 @@ diamond:
 
 checkm: 
     queue: compute
-    threads: 32
-    mem: 64 
-    time: 1440
+    threads: 36
+    mem: 180
+    time: 5760
 
 phylophlan_link:
     queue: compute
