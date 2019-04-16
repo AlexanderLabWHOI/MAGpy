@@ -66,3 +66,9 @@ busco_bac:
     time: 720
     mem: 8
     threads: 1
+
+quast: 
+    queue: compute
+    time: 120
+    mem: 2
+    threads: 2 

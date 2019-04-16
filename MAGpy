@@ -8,7 +8,7 @@ configfile: "config.json"
 IDS, = glob_wildcards("mags/{id}.fa")
 
 rule all:
-	 input: "sourmash_report.csv", "diamond_bin_report_plus.tsv", expand("pfam/{sample}.pfam", sample=IDS), expand("sourmash/{sample}.sm", sample=IDS), expand("diamond_report/bin.{sample}.tsv", sample=IDS), "checkm_plus.txt", "tree/MAGpy/MAGpy.tree.nwk", expand("busco/euk/{sample}/full_table_{sample}.tsv", sample=IDS), "busco_euk_report.tsv", #  expand("busco/bac/{sample}/full_table_{sample}_bac.tsv", sample=IDS), "busco_bac_report.tsv"
+	 input: "sourmash_report.csv", "diamond_bin_report_plus.tsv", expand("pfam/{sample}.pfam", sample=IDS), expand("sourmash/{sample}.sm", sample=IDS), expand("diamond_report/bin.{sample}.tsv", sample=IDS), "checkm_plus.txt", "tree/MAGpy/MAGpy.tree.nwk", expand("busco/euk/{sample}/full_table_{sample}.tsv", sample=IDS), "busco_euk_report.tsv", "quast_report.txt", expand('quast/{sample}/transposed_report.tsv', sample=IDS) #  expand("busco/bac/{sample}/full_table_{sample}_bac.tsv", sample=IDS), "busco_bac_report.tsv"
 
 localrules: mv_busco_euk 
 
@@ -158,6 +158,31 @@ rule mv_busco_euk:
          rm -rf run_{params.outname}   
         """ 
 
+rule busco_summary_euk:
+    input: expand("busco/euk/{sample}/full_table_{sample}.tsv", sample=IDS)
+    output: "busco_euk_report.tsv"
+    params: 
+        dire = "busco/euk"
+    shell: "python scripts/busco-report.py -d {params.dire} -o {output}"
+
+rule quast:
+    input: 'mags/{id}.fa'
+    output: 'quast/{id}/transposed_report.tsv'
+    params:
+        dire = "quast/{id}"
+    conda: "envs/busco.yaml"
+    shell:
+        """
+        quast.py {input} -o {params.dire}
+        """
+rule quast_summary: 
+    input: expand("quast/{sample}/transposed_report.tsv", sample=IDS)
+    output: "quast_report.txt"
+    shell: 
+        """
+        echo -e 'Assembly\t# contigs (>= 0 bp)\t# contigs (>= 1000 bp)\t# contigs (>= 5000 bp)\t# contigs (>= 10000 bp)\t# contigs (>= 25000 bp)\t# contigs (>= 50000 bp)\tTotal length (>= 0 bp)\tTotal length (>= 1000 bp)\tTotal length (>= 5000 bp)\tTotal length (>= 10000 bp)\tTotal length (>= 25000 bp)\tTotal length (>= 50000 bp)\t# contigs\tLargest contig\tTotal length\tGC (%)\tN50\tN75\tL50\tL75\t# Ns per 100 kbp\t' >> {output} 
+        find quast/* -name "transposed_report.tsv" | xargs -I {{}} tail -n 1 {{}} >> {output}
+        """ 
 #rule busco_bac:
 #    input: "mags/{id}.fa"
 #    output: "run_{id}_bac/{id}_bac.tsv"
@@ -182,20 +207,14 @@ rule mv_busco_euk:
 #         rm -rf run_{params.outname}   
 #        """
 
-rule busco_summary_euk:
-        input: expand("busco/euk/{sample}/full_table_{sample}.tsv", sample=IDS)
-        output: "busco_euk_report.tsv"
-        params: 
-            dire = "busco/euk"
-        shell: "python scripts/busco-report.py -d {params.dire} -o {output}"
-
-
 #rule busco_summary_bac:
 #        input: expand("busco/bac/{sample}/full_table_{sample}_bac.tsv", sample=IDS)
 #        output: "busco_bac_report.tsv"
 #        params: 
 #            dire = "busco/bac"
 #        shell: "python scripts/busco-report.py -d {params.dire} -o {output}"
+
+
 
 ##########################################
 #
@@ -307,3 +326,5 @@ rule test_phylophlan:
 		'''
 		test/scripts/test_phylophlan.py {params.pdir} {output}
 		'''
+
+       
