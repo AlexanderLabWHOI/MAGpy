@@ -1,4 +1,4 @@
-for x in $(mags/*fa);
+for x in $(ls mags/*fa);
 do 
     name=${x//\./-}
     mv $x ${name/-fa/.fa}
