@@ -5,4 +5,4 @@ channels:
   - defaults
 dependencies:
     - quast  
-    - busco
+    - busco==3.0.2
