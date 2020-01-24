@@ -1,5 +1,5 @@
 shell.executable("/bin/bash")
-shell.prefix("source $HOME/.bashrc; ")
+#shell.prefix("source $HOME/.bashrc; ")
 
 import os
 
@@ -8,7 +8,7 @@ configfile: "config.json"
 IDS, = glob_wildcards("mags/{id}.fa")
 
 rule all:
-	 input: "sourmash_report.csv", "diamond_bin_report_plus.tsv", expand("pfam/{sample}.pfam", sample=IDS), expand("sourmash/{sample}.sm", sample=IDS), expand("diamond_report/bin.{sample}.tsv", sample=IDS), "checkm_plus.txt", "tree/MAGpy/MAGpy.tree.nwk", expand("busco/euk/{sample}/full_table_{sample}.tsv", sample=IDS), "busco_euk_report.tsv", "quast_report.txt", expand('quast/{sample}/transposed_report.tsv', sample=IDS) #  expand("busco/bac/{sample}/full_table_{sample}_bac.tsv", sample=IDS), "busco_bac_report.tsv"
+	 input: "sourmash_report.csv", "diamond_bin_report_plus.tsv", expand("pfam/{sample}.pfam", sample=IDS), expand("sourmash/{sample}.sm", sample=IDS), expand("diamond_report/bin.{sample}.tsv", sample=IDS), "checkm_plus.txt", expand("busco/euk/{sample}/full_table_{sample}.tsv", sample=IDS), "busco_euk_report.tsv", "quast_report.txt", expand('quast/{sample}/transposed_report.tsv', sample=IDS) #  expand("busco/bac/{sample}/full_table_{sample}_bac.tsv", sample=IDS), "busco_bac_report.tsv", "tree/MAGpy/MAGpy.tree.nwk", 
 
 localrules: mv_busco_euk 
 

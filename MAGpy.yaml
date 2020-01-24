@@ -20,7 +20,7 @@ __default__:
 
 diamond: 
     queue: compute
-    threads: 16
+    threads: 8 
     mem: 16
     time: 1440
 
@@ -49,22 +49,22 @@ sourmash_sig:
     threads: 1
 
 sourmash_gather: 
-    queue: compute
+    queue: scavenger
     time: 1440
-    mem: 16
+    mem: 4
     threads: 1
 
 
 busco_euk: 
     queue: compute
     time: 720
-    mem: 8
+    mem: 4
     threads: 1
 
 busco_bac: 
     queue: compute
     time: 720
-    mem: 8
+    mem: 4
     threads: 1
 
 quast: 
