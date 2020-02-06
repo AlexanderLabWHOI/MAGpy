@@ -261,6 +261,10 @@ rule clean:
 		rm -rf test/outputs
 		rm -rf test_results.txt
 	    rm -rf gtdbtk-output/
+        rm -rf busco_euk_report.tsv
+        rm -rf quast/
+        rm -rf quast_report.txt
+        rm -rf busco/
     	'''
 
 ##########################################
