@@ -6,5 +6,6 @@
     "checkm_dataroot": "/vortexfs1/omics/alexander/halexander/MAGpy-setup/checkm_data",
     "busco_euk": "/vortexfs1/omics/alexander/halexander/MAGpy-setup/eukaryota_odb9",
     "busco_bac": "/vortexfs1/omics/alexander/halexander/MAGpy-setup/bacteria_odb9",
-}
+    "gtdbtk_path": "/vortexfs1/omics/alexander/data/databases/gtdbtk-0.3.2/db/", 
+    "gtdbtk_extension": "fa"}
 
