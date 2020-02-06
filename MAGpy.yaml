@@ -72,3 +72,9 @@ quast:
     time: 120
     mem: 2
     threads: 2 
+
+gtdb:
+    queue: compute
+    time: 1400
+    mem: 185
+    threads: 36
