@@ -8,7 +8,7 @@ configfile: "config.json"
 IDS, = glob_wildcards("mags/{id}.fa")
 
 rule all:
-	 input: "sourmash_report.csv", "diamond_bin_report_plus.tsv", expand("pfam/{sample}.pfam", sample=IDS), expand("sourmash/{sample}.sm", sample=IDS), expand("diamond_report/bin.{sample}.tsv", sample=IDS), "checkm_plus.txt", expand("busco/euk/{sample}/full_table_{sample}.tsv", sample=IDS), "busco_euk_report.tsv", "quast_report.txt", expand('quast/{sample}/transposed_report.tsv', sample=IDS) #  expand("busco/bac/{sample}/full_table_{sample}_bac.tsv", sample=IDS), "busco_bac_report.tsv", "tree/MAGpy/MAGpy.tree.nwk", 
+	 input: "sourmash_report.csv", "diamond_bin_report_plus.tsv", expand("pfam/{sample}.pfam", sample=IDS), expand("sourmash/{sample}.sm", sample=IDS), expand("diamond_report/bin.{sample}.tsv", sample=IDS), "checkm_plus.txt", expand("busco/euk/{sample}/full_table_{sample}.tsv", sample=IDS), "busco_euk_report.tsv", "quast_report.txt", expand('quast/{sample}/transposed_report.tsv', sample=IDS),  'gtdbtk-output/gtdbtk.bac120.summary.tsv', #  expand("busco/bac/{sample}/full_table_{sample}_bac.tsv", sample=IDS), "busco_bac_report.tsv", "tree/MAGpy/MAGpy.tree.nwk", 
 
 localrules: mv_busco_euk 
 
@@ -183,6 +183,25 @@ rule quast_summary:
         echo -e 'Assembly\t# contigs (>= 0 bp)\t# contigs (>= 1000 bp)\t# contigs (>= 5000 bp)\t# contigs (>= 10000 bp)\t# contigs (>= 25000 bp)\t# contigs (>= 50000 bp)\tTotal length (>= 0 bp)\tTotal length (>= 1000 bp)\tTotal length (>= 5000 bp)\tTotal length (>= 10000 bp)\tTotal length (>= 25000 bp)\tTotal length (>= 50000 bp)\t# contigs\tLargest contig\tTotal length\tGC (%)\tN50\tN75\tL50\tL75\t# Ns per 100 kbp\t' >> {output} 
         find quast/* -name "transposed_report.tsv" | xargs -I {{}} tail -n 1 {{}} >> {output}
         """ 
+
+rule gtdb:
+    input: directory("mags/")
+    output: 'gtdbtk-output/gtdbtk.bac120.summary.tsv'
+    params:
+        outdir="gtdbtk-output",
+        cpus=36, 
+        gtdb_path=config["gtdbtk_path"], 
+        extension=config["gtdbtk_extension"]
+    conda:
+        "envs/gtdb.yaml"
+    shell:
+        """
+        export GTDBTK_DATA_PATH={params.gtdb_path}
+        gtdbtk classify_wf --cpus {params.cpus} --genome_dir {input} --out_dir {params.outdir} --extension {params.extension}
+        """
+
+
+
 #rule busco_bac:
 #    input: "mags/{id}.fa"
 #    output: "run_{id}_bac/{id}_bac.tsv"
@@ -241,7 +260,8 @@ rule clean:
 		rm -rf tree
 		rm -rf test/outputs
 		rm -rf test_results.txt
-		'''
+	    rm -rf gtdbtk-output/
+    	'''
 
 ##########################################
 #
